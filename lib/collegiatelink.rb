@@ -3,10 +3,12 @@ require 'net/https'
 require 'net/ssh'
 require 'guid'
 require 'nokogiri'
+require 'happymapper'
 
 require 'collegiatelink/response'
 require 'collegiatelink/request'
 require 'collegiatelink/client'
+require 'collegiatelink/organization'
 
 module CollegiateLink
   URL_BASE = 'https://%s.collegiatelink.net/ws/'

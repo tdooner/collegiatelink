@@ -8,5 +8,6 @@ Gem::Specification.new do |s|
   s.files = ['lib/collegiatelink.rb']
   s.add_dependency 'guid'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'happymapper'
   s.add_development_dependency 'rspec'
 end

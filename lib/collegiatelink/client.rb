@@ -11,7 +11,8 @@ module CollegiateLink
     end
 
     def organizations
-      res = request('organization/list')
+      orgs = request('organization/list')
+      orgs.map{ |o| CollegiateLink::Organization.parse(o.to_s) }
     end
 
     private
@@ -27,7 +28,7 @@ module CollegiateLink
         all_items += cl_resp.items
       end
 
-      all_items.last
+      all_items
     end
   end
 end
