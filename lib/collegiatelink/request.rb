@@ -1,5 +1,26 @@
 module CollegiateLink
+  ##
+  # Represents a single HTTP request to the CollegiateLink API.
+  #
   class Request
+    ##
+    # Create a new Request instance. See +CollegiateLink::ACTIONS+ for a list of
+    # eligible actions.
+    #
+    # ==== Parameters:
+    # All parameters are provided in the URL of the request to CollegiateLink.
+    #
+    # * <tt>:page</tt> - The desired page number of results. (default = 1)
+    # * <tt>:pagesize</tt> - The desired number of records to return (default = 100)
+    # * <tt>:modelformatting</tt> - Either "normal" or "humanreadable". (default = "normal")
+    #
+    # ==== Options:
+    # Options are ways to pass in additional parameters about the request. The
+    # following options are supported.
+    #
+    # * <tt>:sharedkey</tt> - (Required) The shared key which is used, but not included in the URL of requests
+    # * <tt>:debug</tt> - Print debug information as the request happens.
+    #
     def initialize(action, params = {}, opts = {})
       raise UnknownAction unless ACTIONS.include?(action)
       raise AuthenticationException unless opts.include?(:sharedkey)
@@ -14,8 +35,10 @@ module CollegiateLink
       @params[:modelformatting] ||= 'normal'
     end
 
+    ##
+    # Execute the request by sending the HTTP request.
+    #
     def perform
-
       # First, add the time-sensitive bits...
       request_params = @params.merge({
         time:   Time.now.to_i * 1000,
@@ -46,6 +69,10 @@ module CollegiateLink
       end
     end
 
+    ##
+    # Increment the page number and return a request instance that would receive
+    # the next bunch of pages.
+    #
     def request_for_next_page
       Request.new(@action, @params.merge(page: @params[:page] + 1), @opts)
     end

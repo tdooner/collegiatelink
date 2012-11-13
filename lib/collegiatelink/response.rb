@@ -1,5 +1,12 @@
 module CollegiateLink
+  ##
+  # Container for the XML gunk returned from CollegiateLink
+  #
   class Response
+    # Create the response.
+    #
+    # ==== Parameters:
+    # * +document+ - The Nokogiri document of the returned XML
     def initialize(document)
       raise UnknownException unless document.xpath('//results/page')
 
@@ -10,10 +17,12 @@ module CollegiateLink
       @total_pages = document.xpath('//results/page/totalPages').inner_html.to_i
     end
 
+    # Extract the items from the response. Returns a Nokogiri NodeSet.
     def items
       @document.xpath('//results/page/items/*')
     end
 
+    # Utility method to determine if the request has another page to retrieve.
     def has_next_page?
       @page_number < @total_pages
     end
