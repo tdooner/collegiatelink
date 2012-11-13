@@ -9,7 +9,13 @@ Dooner](mailto:tom.dooner@case.edu).
 
 Usage
 ----------------------------------------
-Documentation to follow! Gotta write some code first!
+A couple ways you can use this:
+
+  school = CollegiateLink::Client.new(school name, ip addr, api key)
+  school.organizations
+  school.events
+
+Look in `lib/collegiatelink/client.rb` for more information.
 
 
 Gem Development
@@ -26,6 +32,9 @@ Since this script makes HTTP requests that you want to originate from the other
 end of the SSH tunnel, use [SOCKSify][2] to forward all the script's traffic
 through it. For instance, if you run `ssh -D localhost:8080 [server]` then
 SOCKSify should be run as `socksify_ruby localhost 8080 [your script]`
+
+### Building The Gem
+To build the gem, run `gem build collegiatelink.gemspec`
 
 [1]: http://support.collegiatelink.net/entries/332558-web-services-developer-documentation
 [2]: http://socksify.rubyforge.org/

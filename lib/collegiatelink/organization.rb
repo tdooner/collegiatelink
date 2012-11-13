@@ -34,13 +34,30 @@ module CollegiateLink
     has_many :categories, Category
   end
 
+  ##
+  # An Event record returned by CollegiateLink
+  # See: http://support.collegiatelink.net/entries/332558-web-services-developer-documentation#eventList
+  #
+  # ==== Properties:
+  # * <tt>:id         </tt> - Integer
+  # * <tt>:name       </tt> - String
+  # * <tt>:description</tt> - String
+  # * <tt>:startDate  </tt> - Integer
+  # * <tt>:endDate    </tt> - Integer
+  # * <tt>:location   </tt> - String
+  # * <tt>:status     </tt> - String
+  # * <tt>:urlLarge   </tt> - String
+  # * <tt>:urlSmall   </tt> - String
+  # * <tt>:organization</tt> - The hosting Organization
+  #
   class Event
     include HappyMapper
 
     element :id, Integer
     element :name, String
     element :description, String
-    element :endDate, DateTime
+    element :startDate, Integer
+    element :endDate, Integer
     element :location, String
     element :status, String
     element :urlLarge, String

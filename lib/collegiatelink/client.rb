@@ -16,8 +16,14 @@ module CollegiateLink
     end
 
     def events(params = {})
-      params[:startdate] ||= (Time.now.to_i - 7 * 24 * 60 * 60) * 1000
-      params[:enddate]   ||= (Time.now.to_i) * 1000
+      # Default to showing events in the past 7 days
+      seven_days = 7 * 24 * 60 * 60
+      params[:startdate] ||= (Time.now.to_i - seven_days)
+      params[:enddate]   ||= (Time.now.to_i)
+
+      # Convert to milliseconds...
+      params[:startdate] = params[:startdate].to_i * 1000
+      params[:enddate]   = params[:enddate].to_i * 1000
 
       events = request('event/list', params)
       events.map{ |o| CollegiateLink::Event.parse(o.to_s) }
