@@ -3,8 +3,8 @@ CollegiateLink client
 
 This is a very-under-development client for CollegiateLink's [API][1].
 
-Built for CWRU's Undergraduate Student Government by [Tom
-Dooner](mailto:tom.dooner@case.edu).
+Built for [CWRU](http://case.edu)'s [Undergraduate Student
+Government](http://usg.case.edu) by [Tom Dooner](mailto:tom.dooner@case.edu).
 
 
 Usage
