@@ -47,8 +47,14 @@ module CollegiateLink
       request_params[:hash] = hash(request_params.merge(sharedkey: @opts[:sharedkey]))
 
       # Then, compute the URL...
-      url = URI("#{URL_BASE % @params[:apikey]}#{@action}?#{URI.encode_www_form(request_params)}")
-      puts "requesting: \n#{url}"
+      url = URI([
+        URL_BASE % @params[:apikey]
+        @action
+        '?'
+        URI.encode_www_form(request_params)
+      ].join)
+
+      puts "requesting: \n#{url}"   if @opts[:debug]
 
       # Make the Request!
       res = Net::HTTP.new(url.host, url.port)
