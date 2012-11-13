@@ -15,6 +15,14 @@ module CollegiateLink
       orgs.map{ |o| CollegiateLink::Organization.parse(o.to_s) }
     end
 
+    def events(params = {})
+      params[:startdate] ||= (Time.now.to_i - 7 * 24 * 60 * 60) * 1000
+      params[:enddate]   ||= (Time.now.to_i) * 1000
+
+      events = request('event/list', params)
+      events.map{ |o| CollegiateLink::Event.parse(o.to_s) }
+    end
+
     private
 
     def request(action, params = {})

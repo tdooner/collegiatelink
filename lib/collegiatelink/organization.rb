@@ -33,4 +33,19 @@ module CollegiateLink
     has_many :addresses, Address
     has_many :categories, Category
   end
+
+  class Event
+    include HappyMapper
+
+    element :id, Integer
+    element :name, String
+    element :description, String
+    element :endDate, DateTime
+    element :location, String
+    element :status, String
+    element :urlLarge, String
+    element :urlSmall, String
+
+    has_one :organization, Organization
+  end
 end
