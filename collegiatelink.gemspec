@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
-  s.name = 'CollegiateLink'
-  s.version = '0.0.2'
-  s.date = '2012-11-13'
+  s.name = 'collegiatelink'
+  s.version = '0.0.3'
+  s.date = '2012-01-24'
   s.summary = 'CollegiateLink Client Gem'
   s.authors = ['Tom Dooner']
   s.email = 'ted27@case.edu'
@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'guid'
   s.add_dependency 'nokogiri'
   s.add_dependency 'happymapper'
+  s.add_dependency 'socksify'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'net-ssh'
+  s.add_dependency 'net-ssh'
 end

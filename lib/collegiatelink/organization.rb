@@ -45,10 +45,15 @@ module CollegiateLink
   #
   # ==== Properties:
   # * <tt>:id      </tt> - Integer
-  # * <tt>:ishidden</tt> - String
+  # * <tt>:parentId</tt> - Integer
   # * <tt>:name    </tt> - String
-  # * <tt>:addresses   </tt> - Array of Address objects
-  # * <tt>:categories  </tt> - Array of Category objects
+  # * <tt>:description   </tt> - String
+  # * <tt>:shortName  </tt> - String
+  # * <tt>:siteUrl  </tt> - String
+  # * <tt>:status  </tt> - String
+  # * <tt>:type  </tt> - String
+  # * <tt>:addresses  </tt> - Array of CollegiateLink::Address
+  # * <tt>:categories  </tt> - Array of CollegiateLink::Category
   class Organization
     include HappyMapper
 

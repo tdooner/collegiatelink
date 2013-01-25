@@ -20,6 +20,14 @@ module CollegiateLink
       }
     end
 
+    def self.proxy
+      @@proxy || Net::HTTP
+    end
+
+    def use_socks_proxy(host, port)
+      @@proxy = Net::HTTP.SOCKSProxy(host, port)
+    end
+
     ##
     # Return a complete list of CollegiateLink::Organization instances for your
     # institution.

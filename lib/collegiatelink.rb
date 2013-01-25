@@ -4,6 +4,7 @@ require 'net/ssh'
 require 'guid'
 require 'nokogiri'
 require 'happymapper'
+require 'socksify/http'
 
 require 'collegiatelink/response'
 require 'collegiatelink/request'
@@ -15,10 +16,6 @@ require 'collegiatelink/organization'
 # development, so let me know if you plan to use it. (tomdooner@gmail.com)
 #
 module CollegiateLink
-  # URL base for all requests. The API key will be substituted into this when
-  # the request is made.
-  URL_BASE = 'https://%s.collegiatelink.net/ws/'
-
   # Currently-supported CollegiateLink action request types
   ACTIONS = [
     'organization/list',

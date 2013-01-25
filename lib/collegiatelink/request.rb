@@ -33,6 +33,9 @@ module CollegiateLink
       @params[:page]            ||= 1
       @params[:pagesize]        ||= 100
       @params[:modelformatting] ||= 'normal'
+
+      # Default values for optional parameters
+      @opts[:url_base]  ||= 'https://%s.collegiatelink.net/ws/' % @params[:apikey]
     end
 
     ##
@@ -48,16 +51,16 @@ module CollegiateLink
 
       # Then, compute the URL...
       url = URI([
-        URL_BASE % @params[:apikey]
-        @action
-        '?'
-        URI.encode_www_form(request_params)
+        @opts[:url_base],
+        @action,
+        '?',
+        URI.encode_www_form(request_params),
       ].join)
 
       puts "requesting: \n#{url}"   if @opts[:debug]
 
       # Make the Request!
-      res = Net::HTTP.new(url.host, url.port)
+      res = CollegiateLink::Client.proxy.new(url.host, url.port)
       res.use_ssl = true
       res.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
