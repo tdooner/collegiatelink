@@ -100,4 +100,53 @@ module CollegiateLink
 
     has_one :organization, Organization
   end
+
+  ##
+  # A position of someone in an organization
+  #
+  class Position
+    include HappyMapper
+
+    element :name, String
+    element :enddate, Integer
+    element :startdate, Integer
+    element :userstartdate, Integer
+    element :userenddate, Integer
+
+    def current?
+      use_startdate = (userstartdate > 0) ? userstartdate : startdate
+      indefinite = (userenddate < 0) && (enddate < 0)
+
+      starts = Time.at(use_startdate / 1000, use_startdate % 1000)
+
+      if indefinite
+        return (starts < Time.now)
+      else
+        use_enddate = (userenddate > 0) ? userenddate : enddate
+        ends = Time.at(use_enddate / 1000, use_enddate % 1000)
+        return (starts < Time.now && Time.now < ends)
+      end
+    end
+  end
+
+  ##
+  # A Member record returned by CollegiateLink
+  #
+  class Member
+    include HappyMapper
+
+    #element :affiliation   # Not sure the format of this...
+    element :campusemail, String
+    element :firstname, String
+    element :id, Integer
+    element :lastname, String
+    element :preferredemail, String
+    element :username, String
+
+    has_many :positions, Position
+
+    def active_positions
+      positions.keep_if { |p| p.current? }
+    end
+  end
 end

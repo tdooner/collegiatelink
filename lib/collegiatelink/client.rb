@@ -13,15 +13,16 @@ module CollegiateLink
     def initialize(apikey, ip, sharedkey)
       @params = {
         apikey: apikey,
-        ip:     ip
+        ip:     ip,
       }
       @opts = {
-        sharedkey: sharedkey
+        sharedkey: sharedkey,
       }
+      @@proxy = Net::HTTP
     end
 
     def self.proxy
-      @@proxy || Net::HTTP
+      @@proxy
     end
 
     def use_socks_proxy(host, port)
@@ -66,6 +67,13 @@ module CollegiateLink
 
       events = request('event/list', params)
       events.map{ |o| CollegiateLink::Event.parse(o.to_s) }
+    end
+
+    def roster(id, params = {})
+      params.merge!(:id => id)
+
+      members = request('organization/roster', params)
+      members.map{ |m| CollegiateLink::Member.parse(m.to_s) }
     end
 
     private
