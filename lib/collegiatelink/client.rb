@@ -40,8 +40,7 @@ module CollegiateLink
     # See CollegiateLink::Request#initialize for a list of optional parameters
     #
     def organizations(params = {})
-      orgs = request('organization/list', params)
-      orgs.map{ |o| CollegiateLink::Organization.parse(o.to_s) }
+      orgs = request('organization/list', CollegiateLink::Organization, params)
     end
 
     ##
@@ -65,28 +64,27 @@ module CollegiateLink
       params[:startdate] = params[:startdate].to_i * 1000
       params[:enddate]   = params[:enddate].to_i * 1000
 
-      events = request('event/list', params)
-      events.map{ |o| CollegiateLink::Event.parse(o.to_s) }
+      events = request('event/list', CollegiateLink::Event, params)
     end
 
     def roster(id, params = {})
       params.merge!(:id => id)
 
-      members = request('organization/roster', params)
-      members.map{ |m| CollegiateLink::Member.parse(m.to_s) }
+      members = request('organization/roster', CollegiateLink::Member, params)
     end
 
     private
 
-    def request(action, params = {})
+    def request(action, model, params = {})
       cl_request = CollegiateLink::Request.new(action, params.merge(@params), @opts)
       cl_resp = cl_request.perform
 
-      all_items = cl_resp.items
+      all_items = cl_resp.items.map { |i| model.parse(i.to_s) }
 
       while cl_resp.has_next_page?
-        cl_resp = cl_request.request_for_next_page.perform
-        all_items += cl_resp.items
+        cl_request = cl_request.request_for_next_page
+        cl_resp = cl_request.perform
+        all_items += cl_resp.items.map { |i| model.parse(i.to_s) }
       end
 
       all_items
