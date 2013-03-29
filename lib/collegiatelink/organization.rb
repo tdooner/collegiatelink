@@ -87,7 +87,7 @@ module CollegiateLink
   # * <tt>:status     </tt> - String
   # * <tt>:urlLarge   </tt> - String
   # * <tt>:urlSmall   </tt> - String
-  # * <tt>:organization</tt> - The hosting Organization
+  # * <tt>:organization</tt> - The hosting Organization (..todo?)
   #
   class Event < OpenStruct
     include Representable::XML
@@ -139,55 +139,6 @@ module CollegiateLink
 
     def self.parse(hash)
       new(hash)
-    end
-  end
-
-  ##
-  # A position of someone in an organization
-  #
-  class Position < OpenStruct
-    include Representable::XML
-
-    property :name
-    property :enddate
-    property :startdate
-    property :userstartdate
-    property :userenddate
-
-    def current?
-      use_startdate = (userstartdate > 0) ? userstartdate : startdate
-      indefinite = (userenddate < 0) && (enddate < 0)
-
-      starts = Time.at(use_startdate / 1000, use_startdate % 1000)
-
-      if indefinite
-        return (starts < Time.now)
-      else
-        use_enddate = (userenddate > 0) ? userenddate : enddate
-        ends = Time.at(use_enddate / 1000, use_enddate % 1000)
-        return (starts < Time.now && Time.now < ends)
-      end
-    end
-  end
-
-  ##
-  # A Member record returned by CollegiateLink
-  #
-  class Member < OpenStruct
-    include Representable::XML
-
-    #property :affiliation   # Not sure the format of this...
-    property :campusemail
-    property :firstname
-    property :id
-    property :lastname
-    property :preferredemail
-    property :username
-
-    collection :positions, :class => CollegiateLink::Position
-
-    def active_positions
-      positions.keep_if { |p| p.current? }
     end
   end
 end

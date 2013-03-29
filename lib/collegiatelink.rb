@@ -13,6 +13,7 @@ require 'collegiatelink/response'
 require 'collegiatelink/request'
 require 'collegiatelink/client'
 require 'collegiatelink/organization'
+require 'collegiatelink/member'
 
 ##
 # This gem provides a CollegiateLink API client in Ruby. It's still under
