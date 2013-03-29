@@ -11,16 +11,16 @@ module CollegiateLink
   # * <tt>:street1   </tt> - String
   # * <tt>:street2   </tt> - String
   # * <tt>:type      </tt> - Integer
-  class Address
-    include HappyMapper
+  class Address < OpenStruct
+    include Representable::XML
 
-    element :city, String
-    element :country, String
-    element :postalcode, String
-    element :state, String
-    element :street1, String
-    element :street2, String
-    element :type, Integer
+    property :city
+    property :country
+    property :postalcode
+    property :state
+    property :street1
+    property :street2
+    property :type
   end
 
   ##
@@ -31,12 +31,12 @@ module CollegiateLink
   # * <tt>:id      </tt> - Integer
   # * <tt>:ishidden</tt> - String
   # * <tt>:name    </tt> - String
-  class Category
-    include HappyMapper
+  class Category < OpenStruct
+    include Representable::XML
 
-    element :id, Integer
-    element :ishidden, String
-    element :name, String
+    property :id
+    property :ishidden
+    property :name
   end
 
   ##
@@ -54,19 +54,23 @@ module CollegiateLink
   # * <tt>:type  </tt> - String
   # * <tt>:addresses  </tt> - Array of CollegiateLink::Address
   # * <tt>:categories  </tt> - Array of CollegiateLink::Category
-  class Organization
-    include HappyMapper
+  class Organization < OpenStruct
+    include Representable::XML
 
-    element :id, Integer
-    element :parentId, Integer
-    element :name, String
-    element :description, String
-    element :shortName, String
-    element :siteUrl, String
-    element :status, String
-    element :type, String
-    has_many :addresses, Address
-    has_many :categories, Category
+    property :id
+    property :parentId
+    property :name
+    property :description
+    property :shortName
+    property :siteUrl
+    property :status
+    property :type
+    collection :addresses
+    collection :categories
+
+    def self.parse(xml)
+      from_xml(xml.to_s)
+    end
   end
 
   ##
@@ -85,33 +89,70 @@ module CollegiateLink
   # * <tt>:urlSmall   </tt> - String
   # * <tt>:organization</tt> - The hosting Organization
   #
-  class Event
-    include HappyMapper
+  class Event < OpenStruct
+    include Representable::XML
 
-    element :id, Integer
-    element :name, String
-    element :description, String
-    element :startDate, Integer
-    element :endDate, Integer
-    element :location, String
-    element :status, String
-    element :urlLarge, String
-    element :urlSmall, String
+    property :id
+    property :name
+    property :description
+    property :startDate
+    property :endDate
+    property :location
+    property :status
+    property :urlLarge
+    property :urlSmall
 
-    has_one :organization, Organization
+    def self.parse(xml)
+      from_xml(xml.to_s)
+    end
+  end
+
+  class FinanceTransaction < OpenStruct
+    include Representable::JSON
+
+    property :transactionId
+    property :transactionNumber
+    property :requestId
+    property :requestNumber
+    property :transactionType
+    property :financeTypeId
+    property :financeTypeName
+    property :financeCategoryId
+    property :financeCategoryName
+    property :accountId
+    property :accountName
+    property :originatingAccountId
+    property :originatingAccountName
+    property :originatingOrganizationId
+    property :originiatingOrganizationName
+    property :requestPayeeFirstName
+    property :requestPayeeLastName
+    property :payeeSourceFirstName
+    property :payeeSourceLastName
+    property :transactionDate # todo, make this usable as a date ("1363891642000")
+    property :amount
+    property :endingAllocationAfter
+    property :endingAvailableAfter
+    property :memo
+    property :reconciledStatus
+    property :cancelledStatus
+
+    def self.parse(hash)
+      new(hash)
+    end
   end
 
   ##
   # A position of someone in an organization
   #
-  class Position
-    include HappyMapper
+  class Position < OpenStruct
+    include Representable::XML
 
-    element :name, String
-    element :enddate, Integer
-    element :startdate, Integer
-    element :userstartdate, Integer
-    element :userenddate, Integer
+    property :name
+    property :enddate
+    property :startdate
+    property :userstartdate
+    property :userenddate
 
     def current?
       use_startdate = (userstartdate > 0) ? userstartdate : startdate
@@ -132,18 +173,18 @@ module CollegiateLink
   ##
   # A Member record returned by CollegiateLink
   #
-  class Member
-    include HappyMapper
+  class Member < OpenStruct
+    include Representable::XML
 
-    #element :affiliation   # Not sure the format of this...
-    element :campusemail, String
-    element :firstname, String
-    element :id, Integer
-    element :lastname, String
-    element :preferredemail, String
-    element :username, String
+    #property :affiliation   # Not sure the format of this...
+    property :campusemail
+    property :firstname
+    property :id
+    property :lastname
+    property :preferredemail
+    property :username
 
-    has_many :positions, Position
+    collection :positions, :class => CollegiateLink::Position
 
     def active_positions
       positions.keep_if { |p| p.current? }

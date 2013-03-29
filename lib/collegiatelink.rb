@@ -2,8 +2,11 @@ require 'digest'
 require 'net/https'
 require 'net/ssh'
 require 'guid'
+require 'json'
 require 'nokogiri'
-require 'happymapper'
+require 'ostruct'
+require 'representable/json'
+require 'representable/xml'
 require 'socksify/http'
 
 require 'collegiatelink/response'
@@ -17,12 +20,15 @@ require 'collegiatelink/organization'
 #
 module CollegiateLink
   # Currently-supported CollegiateLink action request types
-  ACTIONS = [
+  OLD_ACTIONS = [
     'organization/list',
     'organization/roster',
     #'user/memberships',
     #'user/position',
     'event/list',
+  ]
+  NEW_ACTIONS = [
+    'financetransactions',
   ]
 
   # Raised when performing a CollegiateLink::Request for an action that is not

@@ -22,20 +22,28 @@ module CollegiateLink
     # * <tt>:debug</tt> - Print debug information as the request happens.
     #
     def initialize(action, params = {}, opts = {})
-      raise UnknownAction unless ACTIONS.include?(action)
-      raise AuthenticationException unless opts.include?(:sharedkey)
-
       @action = action
       @params = params
       @opts = opts
 
+      raise AuthenticationException unless opts.include?(:sharedkey)
+
+      if OLD_ACTIONS.include?(action)
+        @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/ws/' % @params[:apikey]
+        @opts[:response_format] = 'XML'
+      elsif NEW_ACTIONS.include?(action)
+        @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/api/' % @params[:apikey]
+        @opts[:response_format] = 'JSON'
+      else
+        raise UnknownAction, 'Action not supported!'
+      end
+
       # URL Query String Parameters
       @params[:page]            ||= 1
-      @params[:pagesize]        ||= 100
-      @params[:modelformatting] ||= 'normal'
+      @params[:pageSize]        ||= 100
 
       # Default values for optional parameters
-      @opts[:url_base]  ||= 'https://%s.collegiatelink.net/ws/' % @params[:apikey]
+      @opts[:debug]     ||= true
     end
 
     ##
@@ -70,7 +78,12 @@ module CollegiateLink
 
       case resp
       when Net::HTTPSuccess
-        return parse_response(resp.body)
+        case @opts[:response_format]
+        when 'JSON'
+          return parse_json_response(resp.body)
+        when 'XML'
+          return parse_xml_response(resp.body)
+        end
       when Net::HTTPError
         raise NetworkException
       else
@@ -88,7 +101,7 @@ module CollegiateLink
 
     private
 
-    def parse_response(body)
+    def parse_xml_response(body)
       d = Nokogiri::XML::Document.parse(body)
 
       # Parse exceptions
@@ -109,7 +122,13 @@ module CollegiateLink
         end
       end
 
-      Response.new(d)
+      CollegiateLink::Response::XML.new(d)
+    end
+
+    def parse_json_response(body)
+      d = ::JSON.parse(body)
+      # Handle errors?
+      CollegiateLink::Response::JSON.new(d)
     end
 
     def hash(params = {})

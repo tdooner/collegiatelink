@@ -43,6 +43,15 @@ module CollegiateLink
       orgs = request('organization/list', CollegiateLink::Organization, params)
     end
 
+    def financetransactions(params = {})
+      # Default to only showing transactions in the past seven days
+      seven_days = 7 * 24 * 60 * 60
+      params[:startdate] ||= (Time.now.to_i - seven_days)
+      params[:startdate] = params[:startdate].to_i * 1000
+
+      transactions = request('financetransactions', CollegiateLink::FinanceTransaction, params)
+    end
+
     ##
     # Return a complete list of CollegiateLink::Event instances for your
     # institution.
@@ -79,12 +88,12 @@ module CollegiateLink
       cl_request = CollegiateLink::Request.new(action, params.merge(@params), @opts)
       cl_resp = cl_request.perform
 
-      all_items = cl_resp.items.map { |i| model.parse(i.to_s) }
+      all_items = cl_resp.items.map { |i| model.parse(i) }
 
       while cl_resp.has_next_page?
         cl_request = cl_request.request_for_next_page
         cl_resp = cl_request.perform
-        all_items += cl_resp.items.map { |i| model.parse(i.to_s) }
+        all_items += cl_resp.items.map { |i| model.parse(i) }
       end
 
       all_items
