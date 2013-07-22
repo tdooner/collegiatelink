@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = 'collegiatelink'
-  s.version = '0.1.1'
-  s.date = '2012-03-28'
+  s.version = '0.2.0'
+  s.date = '2012-07-21'
   s.summary = 'CollegiateLink Client Gem'
   s.authors = ['Tom Dooner']
-  s.email = 'ted27@case.edu'
+  s.email = 'tomdooner@gmail.com'
   s.files = [
     'lib/collegiatelink.rb',
     'lib/collegiatelink/request.rb',
