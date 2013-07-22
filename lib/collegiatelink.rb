@@ -21,15 +21,11 @@ require 'collegiatelink/member'
 #
 module CollegiateLink
   # Currently-supported CollegiateLink action request types
-  OLD_ACTIONS = [
-    'organization/list',
-    'organization/roster',
-    #'user/memberships',
-    #'user/position',
-    'event/list',
-  ]
   NEW_ACTIONS = [
+    'organizations',
     'financetransactions',
+    'events',
+    'memberships',
   ]
 
   # Raised when performing a CollegiateLink::Request for an action that is not

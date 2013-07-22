@@ -40,7 +40,7 @@ module CollegiateLink
     # See CollegiateLink::Request#initialize for a list of optional parameters
     #
     def organizations(params = {})
-      orgs = request('organization/list', CollegiateLink::Organization, params)
+      orgs = request('organizations', CollegiateLink::Organization, params)
     end
 
     def financetransactions(params = {})
@@ -77,9 +77,9 @@ module CollegiateLink
     end
 
     def roster(id, params = {})
-      params.merge!(:id => id)
+      params.merge!(:organizationId => id)
 
-      members = request('organization/roster', CollegiateLink::Member, params)
+      members = request('memberships', CollegiateLink::Member, params)
     end
 
     private

@@ -28,11 +28,8 @@ module CollegiateLink
 
       raise AuthenticationException unless opts.include?(:sharedkey)
 
-      if OLD_ACTIONS.include?(action)
-        @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/ws/' % @params[:apikey]
-        @opts[:response_format] = 'XML'
-      elsif NEW_ACTIONS.include?(action)
-        @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/api/' % @params[:apikey]
+      if NEW_ACTIONS.include?(action)
+        @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/api/'
         @opts[:response_format] = 'JSON'
       else
         raise UnknownAction, 'Action not supported!'

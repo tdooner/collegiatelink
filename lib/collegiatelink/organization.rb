@@ -41,35 +41,32 @@ module CollegiateLink
 
   ##
   # An Organization record returned by CollegiateLink
-  # See: http://support.collegiatelink.net/entries/332558-web-services-developer-documentation#orgList
-  #
-  # ==== Properties:
-  # * <tt>:id      </tt> - Integer
-  # * <tt>:parentId</tt> - Integer
-  # * <tt>:name    </tt> - String
-  # * <tt>:description   </tt> - String
-  # * <tt>:shortName  </tt> - String
-  # * <tt>:siteUrl  </tt> - String
-  # * <tt>:status  </tt> - String
-  # * <tt>:type  </tt> - String
-  # * <tt>:addresses  </tt> - Array of CollegiateLink::Address
-  # * <tt>:categories  </tt> - Array of CollegiateLink::Category
   class Organization < OpenStruct
-    include Representable::XML
+    include Representable::JSON
 
-    property :id
-    property :parentId
+    property :organizationId
     property :name
-    property :description
-    property :shortName
-    property :siteUrl
     property :status
-    property :type
-    collection :addresses
-    collection :categories
+    property :shortName
+    property :summary
+    property :description
+    property :addressStreet1
+    property :addressStreet2
+    property :addressCity
+    property :addressStateProvince
+    property :addressZipPostal
+    property :phoneNumber
+    property :email
+    property :externalWebsite
+    property :facebookUrl
+    property :twitterUrl
+    property :profileUrl
+    property :typeId
+    property :typeName
+    property :parentId
 
-    def self.parse(xml)
-      from_xml(xml.to_s)
+    def self.parse(json)
+      new(json)
     end
   end
 
