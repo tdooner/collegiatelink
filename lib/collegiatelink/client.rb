@@ -73,7 +73,7 @@ module CollegiateLink
       params[:startdate] = params[:startdate].to_i * 1000
       params[:enddate]   = params[:enddate].to_i * 1000
 
-      events = request('event/list', CollegiateLink::Event, params)
+      events = request('events', CollegiateLink::Event, params)
     end
 
     def roster(id, params = {})

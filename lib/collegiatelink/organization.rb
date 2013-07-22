@@ -74,33 +74,28 @@ module CollegiateLink
   # An Event record returned by CollegiateLink
   # See: http://support.collegiatelink.net/entries/332558-web-services-developer-documentation#eventList
   #
-  # ==== Properties:
-  # * <tt>:id         </tt> - Integer
-  # * <tt>:name       </tt> - String
-  # * <tt>:description</tt> - String
-  # * <tt>:startDate  </tt> - Integer
-  # * <tt>:endDate    </tt> - Integer
-  # * <tt>:location   </tt> - String
-  # * <tt>:status     </tt> - String
-  # * <tt>:urlLarge   </tt> - String
-  # * <tt>:urlSmall   </tt> - String
-  # * <tt>:organization</tt> - The hosting Organization (..todo?)
-  #
   class Event < OpenStruct
-    include Representable::XML
+    include Representable::JSON
 
-    property :id
-    property :name
+    property :eventId
+    property :eventName
+    property :organizationId
+    property :organizationName
+    property :startDateTime
+    property :endDateTime
+    property :externalLocationId
+    property :locationId
+    property :otherLocation
+    # properties for address here...
     property :description
-    property :startDate
-    property :endDate
-    property :location
+    property :flyerUrl
+    property :thumbnailUrl
+    property :typeId
+    property :typeName
     property :status
-    property :urlLarge
-    property :urlSmall
 
-    def self.parse(xml)
-      from_xml(xml.to_s)
+    def self.parse(json)
+      new(json)
     end
   end
 
