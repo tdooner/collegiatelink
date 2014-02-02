@@ -18,7 +18,7 @@ module CollegiateLink
     # Options are ways to pass in additional parameters about the request. The
     # following options are supported.
     #
-    # * <tt>:sharedkey</tt> - (Required) The shared key which is used, but not included in the URL of requests
+    # * <tt>:privatekey</tt> - (Required) The shared key which is used, but not included in the URL of requests
     # * <tt>:debug</tt> - Print debug information as the request happens.
     #
     def initialize(action, params = {}, opts = {})
@@ -26,7 +26,7 @@ module CollegiateLink
       @params = params
       @opts = opts
 
-      raise AuthenticationException unless opts.include?(:sharedkey)
+      raise AuthenticationException unless opts.include?(:privatekey)
 
       if NEW_ACTIONS.include?(action)
         @opts[:url_base] ||= 'https://casewestern.collegiatelink.net/api/'
@@ -52,7 +52,7 @@ module CollegiateLink
         time:   Time.now.to_i * 1000,
         random: Guid.new
       })
-      request_params[:hash] = hash(request_params.merge(sharedkey: @opts[:sharedkey]))
+      request_params[:hash] = hash(request_params.merge(privatekey: @opts[:privatekey]))
 
       # Then, compute the URL...
       url = URI([
@@ -134,7 +134,7 @@ module CollegiateLink
         params[:ip],
         params[:time].to_i,
         params[:random],
-        params[:sharedkey],
+        params[:privatekey],
       ].join
     end
   end

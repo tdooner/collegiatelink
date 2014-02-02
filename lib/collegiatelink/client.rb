@@ -6,17 +6,22 @@ module CollegiateLink
     # Creates a CollegiateLink client.
     #
     # ==== Parameters:
-    # * +apikey+ - The CollegiateLink "apikey" for your institution. For example, at Case Western Reserve University we go to http://casewestern.collegiatelink.net, so our "apikey" is "casewestern"
-    # * +ip+ - The IP address that the +sharedkey+ is approved for.
-    # * +sharedkey+ - The shared key granted by CollegiateLink to your IP and institution.
+    # * +options+ - A hash containing the following values:
+    #   * +apikey+ - The CollegiateLink "apikey"
+    #   * +ip+ - (Optional) The IP address that the +apikey+ is approved for,
+    #     if and only if that is how the +apikey+ is configured on CollegiateLink's
+    #     side.
+    #   * +privatekey+ - The shared key granted by CollegiateLink to your IP and
+    #     institution.
     #
-    def initialize(apikey, ip, sharedkey)
+    def initialize(options = {})
       @params = {
-        apikey: apikey,
-        ip:     ip,
+        apikey: options[:apikey],
       }
+      @params.merge(ip: options[:ip]) if options[:ip]
+
       @opts = {
-        sharedkey: sharedkey,
+        privatekey: options[:privatekey],
       }
       @@proxy = Net::HTTP
     end
@@ -40,7 +45,7 @@ module CollegiateLink
     # See CollegiateLink::Request#initialize for a list of optional parameters
     #
     def organizations(params = {})
-      orgs = request('organizations', CollegiateLink::Organization, params)
+      request('organizations', CollegiateLink::Organization, params)
     end
 
     def financetransactions(params = {})
@@ -49,7 +54,7 @@ module CollegiateLink
       params[:startdate] ||= (Time.now.to_i - seven_days)
       params[:startdate] = params[:startdate].to_i * 1000
 
-      transactions = request('financetransactions', CollegiateLink::FinanceTransaction, params)
+      request('financetransactions', CollegiateLink::FinanceTransaction, params)
     end
 
     ##
@@ -73,13 +78,13 @@ module CollegiateLink
       params[:startdate] = params[:startdate].to_i * 1000
       params[:enddate]   = params[:enddate].to_i * 1000
 
-      events = request('events', CollegiateLink::Event, params)
+      request('events', CollegiateLink::Event, params)
     end
 
     def roster(id, params = {})
       params.merge!(:organizationId => id)
 
-      members = request('memberships', CollegiateLink::Member, params)
+      request('memberships', CollegiateLink::Member, params)
     end
 
     private

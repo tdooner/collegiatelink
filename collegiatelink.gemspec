@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = 'collegiatelink'
-  s.version = '0.2.0'
-  s.date = '2012-07-21'
+  s.version = '0.3.0'
+  s.date = '2014-02-02'
   s.summary = 'CollegiateLink Client Gem'
   s.authors = ['Tom Dooner']
   s.email = 'tomdooner@gmail.com'
